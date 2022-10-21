@@ -1,0 +1,47 @@
+#
+name: Main CI
+#
+on:
+  push:
+    branches:
+      - "main"
+      - "next"
+      - "next-major"
+  pull_request:
+    branches:
+      - "main"
+      - "next"
+      - "next-major"
+jobs:
+
+  Containerize:
+    runs-on: ubuntu-latest
+    steps:
+      #Yes we need code
+      - uses: actions/checkout@v2
+        with:
+          submodules: false
+          persist-credentials: false
+      # These steps are quick and will work or if fail only because of external issues
+      - name: Login to ghcr for helm
+        run: |
+          echo ${{ secrets.GITHUB_TOKEN }} | helm registry login --password-stdin -u ${{ github.repository_owner }} ghcr.io/${{ github.repository_owner }}
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - uses: azure/setup-helm@v3
+      - name: Semantic Release
+        if: github.event_name != 'pull_request'
+        id: version
+        uses: cycjimmy/semantic-release-action@v3.1.2
+        with:
+          semantic_version: 19
+          extra_plugins: |
+            @semantic-release/exec
+            @semantic-release/git
+            conventional-changelog-conventionalcommits
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REGISTRY_USERNAME: ${{ github.repository_owner }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}

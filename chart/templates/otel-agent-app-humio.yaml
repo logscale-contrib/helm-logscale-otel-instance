@@ -1,0 +1,78 @@
+apiVersion: opentelemetry.io/v1alpha1
+kind: OpenTelemetryCollector
+metadata:
+  name: humio-agent-apphumio
+  labels:
+    {{- include "otel.labels" . | nindent 4 }}
+  {{- with .Values.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    
+spec:
+  serviceAccount: {{ include "otel.serviceAccountName" . }}-otel
+  image: otel/opentelemetry-collector-contrib:0.56.0
+  maxReplicas: 3
+  mode: deployment
+  env:
+        - name: K8S_NODE_NAME
+          valueFrom:
+            fieldRef:
+                fieldPath: spec.nodeName
+        - name: HUMIO_TOKEN_OTEL_LOGS
+          valueFrom:
+            secretKeyRef:
+                name: {{ .Values.humiosecretprefix }}-all-humio-infra-otel-logs  
+                key: token
+        - name: HUMIO_TOKEN_OTEL_METRICS
+          valueFrom:
+            secretKeyRef:
+                name: {{ .Values.humiosecretprefix }}-all-humio-infra-otel-metrics  
+                key: token
+        - name: HUMIO_TOKEN_OTEL_TRACE
+          valueFrom:
+            secretKeyRef:
+                name: {{ .Values.humiosecretprefix }}-all-humio-infra-otel-trace
+                key: token
+  config: |
+    exporters:
+        splunk_hec/otel_logs:
+            endpoint: "{{ .Values.humioservice }}"
+            token: $HUMIO_TOKEN_OTEL_LOGS
+        splunk_hec/otel_metrics:
+            endpoint: "{{ .Values.humioservice }}"
+            token: $HUMIO_TOKEN_OTEL_METRICS
+        splunk_hec/otel_trace:
+            endpoint: "{{ .Values.humioservice }}"
+            token: $HUMIO_TOKEN_OTEL_TRACE
+    receivers:
+      otlp:
+        protocols:
+          grpc:
+          http:
+    processors:
+      batch:     
+
+    extensions:
+      health_check:
+        endpoint: 0.0.0.0:13133
+      pprof:
+        endpoint: :1888
+      zpages:
+        endpoint: :55679
+
+    service:
+      extensions: [pprof, zpages, health_check]
+      pipelines:
+        metrics:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [splunk_hec/otel_metrics]
+        logs:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [splunk_hec/otel_logs]
+        traces:
+          receivers: [otlp]
+          processors: [batch]
+          exporters: [splunk_hec/otel_trace]

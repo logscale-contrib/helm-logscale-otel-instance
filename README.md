@@ -1,0 +1,1 @@
+# helm-logscale-otel-instance

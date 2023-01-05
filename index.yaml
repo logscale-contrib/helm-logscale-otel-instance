@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   otel-logscale:
   - apiVersion: v2
+    appVersion: 2.0.0-next.1
+    created: "2023-01-05T17:39:20.176980864Z"
+    description: A Helm chart for Kubernetes
+    digest: dcb5e04f4d0ee3cffb4d919422d763b628b85d0a1923d9cad3a44d45e714b0c2
+    name: otel-logscale
+    type: application
+    urls:
+    - https://github.com/logscale-contrib/helm-logscale-otel-instance/releases/download/v2.0.0-next.1/otel-logscale-2.0.0-next.1.tgz
+    version: 2.0.0-next.1
+  - apiVersion: v2
     appVersion: 1.0.1
     created: "2022-10-21T17:33:45.162784824Z"
     description: A Helm chart for Kubernetes
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/logscale-contrib/helm-logscale-otel-instance/releases/download/v1.0.1/otel-logscale-1.0.1.tgz
     version: 1.0.1
-generated: "2022-10-21T17:33:45.16202092Z"
+generated: "2023-01-05T17:39:20.175962048Z"

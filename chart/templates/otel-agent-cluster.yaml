@@ -33,12 +33,14 @@ spec:
                 key: token
   config: |
     exporters:
-        splunk_hec/k8s_logs:
+        otlphttp/k8s_logs:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_K8S_LOGS
-        splunk_hec/k8s_metrics:
+            headers:
+              Authorization: $HUMIO_TOKEN_K8S_LOGS
+        otlphttp/k8s_metrics:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_K8S_METRICS
+            headers:
+              Authorization: $HUMIO_TOKEN_K8S_METRICS
     receivers:
       k8s_events:
       k8s_cluster:
@@ -88,8 +90,8 @@ spec:
         metrics:
           receivers: [k8s_cluster, kubeletstats]
           processors: [batch]
-          exporters: [splunk_hec/k8s_metrics]
+          exporters: [otlphttp/k8s_metrics]
         logs:
           receivers: [k8s_events]
           processors: [batch]
-          exporters: [splunk_hec/k8s_logs]
+          exporters: [otlphttp/k8s_logs]

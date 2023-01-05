@@ -14,7 +14,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-humioservice: "http://humio-humio-cluster:8080/services/collector"
+humioservice: "http://humio-humio-cluster:8080/api/v1/ingest/otlp"
 humiosecretprefix: "humio-humio-cluster"
 serviceAccount:
   # Specifies whether a service account should be created

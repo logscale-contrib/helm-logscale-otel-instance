@@ -36,15 +36,18 @@ spec:
                 key: token
   config: |
     exporters:
-        splunk_hec/otel_logs:
+        otlphttp/otel_logs:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_OTEL_LOGS
-        splunk_hec/otel_metrics:
+            headers:
+              Authorization: $HUMIO_TOKEN_OTEL_LOGS
+        otlphttp/otel_metrics:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_OTEL_METRICS
-        splunk_hec/otel_trace:
+            headers:
+              Authorization: $HUMIO_TOKEN_OTEL_METRICS
+        otlphttp/otel_trace:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_OTEL_TRACE
+            headers:
+              Authorization: $HUMIO_TOKEN_OTEL_TRACE
     receivers:
       otlp:
         protocols:
@@ -67,12 +70,12 @@ spec:
         metrics:
           receivers: [otlp]
           processors: [batch]
-          exporters: [splunk_hec/otel_metrics]
+          exporters: [otlphttp/otel_metrics]
         logs:
           receivers: [otlp]
           processors: [batch]
-          exporters: [splunk_hec/otel_logs]
+          exporters: [otlphttp/otel_logs]
         traces:
           receivers: [otlp]
           processors: [batch]
-          exporters: [splunk_hec/otel_trace]
+          exporters: [otlphttp/otel_trace]

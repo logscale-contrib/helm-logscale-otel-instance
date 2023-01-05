@@ -1,3 +1,4 @@
+{{- if .Values.components.nodes }}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
@@ -337,3 +338,4 @@ spec:
             - batch
           exporters:
             - otlphttp/k8s_logs
+{{- end }}    

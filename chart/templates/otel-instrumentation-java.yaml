@@ -18,7 +18,7 @@ spec:
     - name: SPLUNK_TRACE_RESPONSE_HEADER_ENABLED
       value: "true"
   exporter:
-    endpoint: http://humio-agent-apphumio-collector-headless:4317
+    endpoint: http://humio-agent-apphumio-collector-headless.logscale-ops:4317
 
   propagators:
     - tracecontext

@@ -1,3 +1,4 @@
+{{- if .Values.components.app }}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
@@ -79,3 +80,4 @@ spec:
           receivers: [otlp]
           processors: [batch]
           exporters: [otlphttp/otel_trace]
+  {{- end }}              

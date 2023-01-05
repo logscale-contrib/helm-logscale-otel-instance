@@ -15,18 +15,19 @@ spec:
   tolerations:
         - operator: "Exists"
           effect: "NoSchedule"
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: beta.kubernetes.io/os
-          operator: In
-          values:
-          - linux
-        - key: eks.amazonaws.com/compute-type
-          operator: NotIn
-          values:
-          - fargate
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: beta.kubernetes.io/os
+            operator: In
+            values:
+            - linux
+          - key: eks.amazonaws.com/compute-type
+            operator: NotIn
+            values:
+            - fargate
   env:
         - name: K8S_NODE_NAME
           valueFrom:

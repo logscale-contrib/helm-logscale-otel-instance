@@ -56,11 +56,11 @@ spec:
         otlphttp/k8s_logs:
             endpoint: "{{ .Values.humioservice }}"
             headers:
-              Authorization: $HUMIO_TOKEN_K8S_LOGS
+              Authorization: Bearer $HUMIO_TOKEN_K8S_LOGS
         otlphttp/linux_journald:
             endpoint: "{{ .Values.humioservice }}"
             headers:
-              Authorization: $HUMIO_TOKEN_K8S_METRICS
+              Authorization: Bearer $HUMIO_TOKEN_K8S_METRICS
     receivers:
       filelog/containers:
         include:

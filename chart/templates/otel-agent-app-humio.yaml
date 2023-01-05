@@ -39,15 +39,15 @@ spec:
         otlphttp/otel_logs:
             endpoint: "{{ .Values.humioservice }}"
             headers:
-              Authorization: $HUMIO_TOKEN_OTEL_LOGS
+              Authorization: Bearer $HUMIO_TOKEN_OTEL_LOGS
         otlphttp/otel_metrics:
             endpoint: "{{ .Values.humioservice }}"
             headers:
-              Authorization: $HUMIO_TOKEN_OTEL_METRICS
+              Authorization: Bearer $HUMIO_TOKEN_OTEL_METRICS
         otlphttp/otel_trace:
             endpoint: "{{ .Values.humioservice }}"
             headers:
-              Authorization: $HUMIO_TOKEN_OTEL_TRACE
+              Authorization: Bearer $HUMIO_TOKEN_OTEL_TRACE
     receivers:
       otlp:
         protocols:

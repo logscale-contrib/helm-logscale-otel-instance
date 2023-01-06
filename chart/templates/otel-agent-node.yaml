@@ -1,3 +1,4 @@
+{{- if .Values.components.nodes }}
 apiVersion: opentelemetry.io/v1alpha1
 kind: OpenTelemetryCollector
 metadata:
@@ -15,6 +16,19 @@ spec:
   tolerations:
         - operator: "Exists"
           effect: "NoSchedule"
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: beta.kubernetes.io/os
+            operator: In
+            values:
+            - linux
+          - key: eks.amazonaws.com/compute-type
+            operator: NotIn
+            values:
+            - fargate
   env:
         - name: K8S_NODE_NAME
           valueFrom:
@@ -40,12 +54,14 @@ spec:
             type: Directory
   config: |
     exporters:
-        splunk_hec/k8s_logs:
+        otlphttp/k8s_logs:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_K8S_LOGS
-        splunk_hec/linux_journald:
+            headers:
+              Authorization: Bearer $HUMIO_TOKEN_K8S_LOGS
+        otlphttp/linux_journald:
             endpoint: "{{ .Values.humioservice }}"
-            token: $HUMIO_TOKEN_K8S_METRICS
+            headers:
+              Authorization: Bearer $HUMIO_TOKEN_K8S_METRICS
     receivers:
       filelog/containers:
         include:
@@ -321,12 +337,5 @@ spec:
             - resourcedetection
             - batch
           exporters:
-            - splunk_hec/k8s_logs
-        # logs/systemd:
-        #   receivers:
-        #     - journald
-        #   processors:
-        #     # - logstransform/systemd
-        #     - batch
-        #   exporters:
-        #     - splunk_hec/linux_journald
+            - otlphttp/k8s_logs
+{{- end }}    

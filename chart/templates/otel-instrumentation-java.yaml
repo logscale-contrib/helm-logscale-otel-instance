@@ -15,8 +15,8 @@ spec:
     #   value: http://humio-agent-apphumio-collector-headless:4317
     # - name: OTEL_EXPORTER_OTLP_TIMEOUT
     #   value: "20"
-    - name: SPLUNK_TRACE_RESPONSE_HEADER_ENABLED
-      value: "true"
+    # - name: SPLUNK_TRACE_RESPONSE_HEADER_ENABLED
+    #   value: "true"
   exporter:
     endpoint: http://humio-agent-apphumio-collector-headless.logscale-ops:4317
 
